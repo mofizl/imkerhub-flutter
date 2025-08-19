@@ -68,9 +68,11 @@ jobs:
         
     - name: Build iOS app
       run: |
-        # Set iOS deployment target to 17.0 (available on GitHub Actions)
-        sed -i '' 's/IPHONEOS_DEPLOYMENT_TARGET = .*/IPHONEOS_DEPLOYMENT_TARGET = 17.0;/g' ios/Runner.xcodeproj/project.pbxproj
-        flutter build ios --release --no-codesign
+        # Set iOS deployment target to 16.0 in multiple places
+        sed -i '' 's/IPHONEOS_DEPLOYMENT_TARGET = .*/IPHONEOS_DEPLOYMENT_TARGET = 16.0;/g' ios/Runner.xcodeproj/project.pbxproj
+        sed -i '' 's/platform :ios, .*/platform :ios, '\''16.0'\''/g' ios/Podfile
+        # Build with explicit iOS version
+        flutter build ios --release --no-codesign --target-platform ios-arm64
         
     - name: Build and Archive
       run: |
