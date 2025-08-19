@@ -92,12 +92,11 @@ jobs:
         # Build iOS without code signing first
         flutter build ios --release --no-codesign
         
-        # Then create archive with explicit SDK
+        # Then create archive with explicit SDK - try without destination
         cd ios
         xcodebuild -workspace Runner.xcworkspace \
           -scheme Runner \
           -configuration Release \
-          -destination "generic/platform=iOS" \
           -sdk iphoneos18.0 \
           -archivePath $PWD/build/Runner.xcarchive \
           archive

@@ -1,1 +1,1 @@
-Use explicit xcodebuild with iphoneos18.0 SDK
+Remove destination specifier from xcodebuild
