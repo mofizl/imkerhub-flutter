@@ -45,5 +45,13 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>ImkerHub benötigt Zugriff auf das Mikrofon für die Spracheingabe bei der Stockkartenverwaltung.</string>
+	<key>NSSpeechRecognitionUsageDescription</key>
+	<string>ImkerHub verwendet Spracherkennung, um Ihre gesprochenen Notizen in Text umzuwandeln und in der Stockkarte zu speichern.</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>ImkerHub benötigt Ihren Standort, um Bienenstöcke geografisch zu verwalten und standortbezogene Daten zu erfassen.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>ImkerHub benötigt Ihren Standort, um Bienenstöcke geografisch zu verwalten und standortbezogene Daten zu erfassen.</string>
 </dict>
 </plist>
