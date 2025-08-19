@@ -112,6 +112,11 @@ jobs:
           -authenticationKeyPath $PWD/AuthKey_${{ secrets.APP_STORE_CONNECT_API_KEY_ID }}.p8 \
           -authenticationKeyID ${{ secrets.APP_STORE_CONNECT_API_KEY_ID }} \
           -authenticationKeyIssuerID ${{ secrets.APP_STORE_CONNECT_API_ISSUER_ID }}
+        
+        # Debug: List files to see where IPA was created
+        echo "Files in ios/build directory:"
+        ls -la $PWD/build/ || echo "ios/build directory not found"
+        find . -name "*.ipa" -type f || echo "No IPA files found"
           
     - name: Upload build artifacts
       uses: actions/upload-artifact@v4
