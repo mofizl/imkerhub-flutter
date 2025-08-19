@@ -46,7 +46,10 @@ jobs:
         
         # Import certificate
         echo "$IOS_CERTIFICATE_BASE64" | base64 --decode > certificate.p12
-        security import certificate.p12 -k build.keychain -P "$IOS_CERTIFICATE_PASSWORD" -T /usr/bin/codesign
+        echo "Certificate file size: $(ls -la certificate.p12)"
+        # Test certificate file
+        openssl pkcs12 -in certificate.p12 -info -noout -passin pass:"$IOS_CERTIFICATE_PASSWORD" || echo "Certificate test failed"
+        security import certificate.p12 -k build.keychain -P "$IOS_CERTIFICATE_PASSWORD" -T /usr/bin/codesign -A
         security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k "$KEYCHAIN_PASSWORD" build.keychain
         
         # Install provisioning profile
