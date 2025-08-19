@@ -62,7 +62,11 @@ jobs:
 
         # apply provisioning profile
         mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
-        cp $PP_PATH ~/Library/MobileDevice/Provisioning\ Profiles
+        cp $PP_PATH ~/Library/MobileDevice/Provisioning\ Profiles/
+        
+        # Also install with proper name
+        PROFILE_UUID=$(grep -aA1 UUID $PP_PATH | grep string | sed 's/.*<string>//;s/<\/string>.*//')
+        cp $PP_PATH ~/Library/MobileDevice/Provisioning\ Profiles/$PROFILE_UUID.mobileprovision
         
     - name: Build IPA directly
       run: |
