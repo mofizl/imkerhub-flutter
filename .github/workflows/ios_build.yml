@@ -64,9 +64,18 @@ jobs:
         mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
         cp $PP_PATH ~/Library/MobileDevice/Provisioning\ Profiles/
         
-        # Also install with proper name
+        # Extract profile info
         PROFILE_UUID=$(grep -aA1 UUID $PP_PATH | grep string | sed 's/.*<string>//;s/<\/string>.*//')
+        PROFILE_NAME=$(grep -aA1 -E '<key>Name</key>' $PP_PATH | grep string | sed 's/.*<string>//;s/<\/string>.*//')
+        
+        echo "Provisioning Profile UUID: $PROFILE_UUID"
+        echo "Provisioning Profile Name: $PROFILE_NAME"
+        
+        # Install with UUID name
         cp $PP_PATH ~/Library/MobileDevice/Provisioning\ Profiles/$PROFILE_UUID.mobileprovision
+        
+        # Update Xcode project with correct profile name
+        sed -i '' "s/PROVISIONING_PROFILE_SPECIFIER = \"ImkerHub Distribution\"/PROVISIONING_PROFILE_SPECIFIER = \"$PROFILE_NAME\"/g" ios/Runner.xcodeproj/project.pbxproj
         
     - name: Build IPA directly
       run: |
