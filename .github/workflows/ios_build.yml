@@ -44,16 +44,16 @@ jobs:
         security unlock-keychain -p "$KEYCHAIN_PASSWORD" build.keychain
         security set-keychain-settings -t 3600 -u build.keychain
         
-        # Import certificate - Convert through PEM format for macOS compatibility
+        # Import certificate - Use different approach for private key
         echo "$IOS_CERTIFICATE_BASE64" | base64 --decode > certificate.p12
         
-        # Extract certificate and private key separately
+        # Extract certificate and private key separately  
         openssl pkcs12 -in certificate.p12 -nokeys -out cert.pem -passin pass:"$IOS_CERTIFICATE_PASSWORD" -passout pass:
-        openssl pkcs12 -in certificate.p12 -nocerts -out key.pem -passin pass:"$IOS_CERTIFICATE_PASSWORD" -passout pass:"$IOS_CERTIFICATE_PASSWORD"
+        openssl pkcs12 -in certificate.p12 -nocerts -nodes -out key_unencrypted.pem -passin pass:"$IOS_CERTIFICATE_PASSWORD"
         
-        # Import certificate and key separately
+        # Import certificate and unencrypted private key
         security import cert.pem -k build.keychain -T /usr/bin/codesign -A
-        security import key.pem -k build.keychain -P "$IOS_CERTIFICATE_PASSWORD" -T /usr/bin/codesign -A
+        security import key_unencrypted.pem -k build.keychain -T /usr/bin/codesign -A
         security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k "$KEYCHAIN_PASSWORD" build.keychain
         
         # Install provisioning profile
