@@ -89,8 +89,12 @@ jobs:
         # Set deployment target
         export IPHONEOS_DEPLOYMENT_TARGET=13.0
         
-        # Build iOS without code signing first, targeting specific iOS version
-        flutter build ios --release --no-codesign --target-platform ios-arm64
+        # List available Xcode versions and use stable one
+        sudo xcode-select -s /Applications/Xcode_16.2.app/Contents/Developer || true
+        xcodebuild -version
+        
+        # Build iOS without code signing first
+        flutter build ios --release --no-codesign
         
         # Then create archive with explicit SDK - try without destination
         cd ios

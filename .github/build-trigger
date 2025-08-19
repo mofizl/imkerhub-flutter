@@ -1,1 +1,1 @@
-Use macos-15 runner and explicit iOS targeting
+Remove invalid target-platform flag and select stable Xcode
