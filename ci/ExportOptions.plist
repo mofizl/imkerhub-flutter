@@ -6,6 +6,11 @@
     <string>app-store</string>
     <key>teamID</key>
     <string>QX8XC3CNTR</string>
+    <key>provisioningProfiles</key>
+    <dict>
+        <key>com.imkerhub.mofiz</key>
+        <string>ImkerHub App Store</string>
+    </dict>
     <key>uploadBitcode</key>
     <false/>
     <key>uploadSymbols</key>
