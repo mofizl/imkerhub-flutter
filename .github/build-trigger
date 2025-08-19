@@ -1,1 +1,1 @@
-Fix certificate import with better error handling
+Revert to original certificate import method that worked in build 25
