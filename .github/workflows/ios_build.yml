@@ -10,7 +10,7 @@ on:
 jobs:
   build_ios:
     name: Build iOS App
-    runs-on: macos-latest
+    runs-on: macos-15
     
     steps:
     - name: Checkout code
@@ -89,8 +89,8 @@ jobs:
         # Set deployment target
         export IPHONEOS_DEPLOYMENT_TARGET=13.0
         
-        # Build iOS without code signing first
-        flutter build ios --release --no-codesign
+        # Build iOS without code signing first, targeting specific iOS version
+        flutter build ios --release --no-codesign --target-platform ios-arm64
         
         # Then create archive with explicit SDK - try without destination
         cd ios
