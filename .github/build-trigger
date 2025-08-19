@@ -1,1 +1,1 @@
-Debug available iOS SDKs and set deployment target
+Use explicit xcodebuild with iphoneos18.0 SDK
