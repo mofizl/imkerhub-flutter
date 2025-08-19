@@ -1,1 +1,1 @@
-Switch to macos-14 runner for stable iOS platform
+Fix certificate import with better error handling
