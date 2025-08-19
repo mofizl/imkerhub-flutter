@@ -10,7 +10,7 @@ on:
 jobs:
   build_ios:
     name: Build iOS App
-    runs-on: macos-15
+    runs-on: macos-14
     
     steps:
     - name: Checkout code
@@ -89,8 +89,8 @@ jobs:
         # Set deployment target
         export IPHONEOS_DEPLOYMENT_TARGET=13.0
         
-        # Try using Xcode 16.0 instead of 16.2 for better iOS platform compatibility
-        sudo xcode-select -s /Applications/Xcode_16.0.app/Contents/Developer || sudo xcode-select -s /Applications/Xcode_15.4.app/Contents/Developer || true
+        # Try using the default Xcode version on macos-14
+        # sudo xcode-select -s /Applications/Xcode_15.4.app/Contents/Developer || true
         xcodebuild -version
         xcodebuild -showsdks
         

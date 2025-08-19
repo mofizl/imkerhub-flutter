@@ -1,1 +1,1 @@
-Switch back to flutter build ipa with Xcode 16.0
+Switch to macos-14 runner for stable iOS platform
