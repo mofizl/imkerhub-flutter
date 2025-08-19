@@ -51,18 +51,30 @@ jobs:
         echo -n "$IOS_CERTIFICATE_BASE64" | base64 --decode -o $CERTIFICATE_PATH
         echo -n "$IOS_PROVISIONING_PROFILE_BASE64" | base64 --decode -o $PP_PATH
         
+        # Verify files were created
+        ls -la $CERTIFICATE_PATH $PP_PATH
+        
         # Create and configure keychain
         security create-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
         security set-keychain-settings -lut 21600 $KEYCHAIN_PATH
         security unlock-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
+        security default-keychain -s $KEYCHAIN_PATH
         
         # Import certificate
         security import $CERTIFICATE_PATH -P "$IOS_CERTIFICATE_PASSWORD" -A -t cert -f pkcs12 -k $KEYCHAIN_PATH
-        security list-keychains -d user -s $KEYCHAIN_PATH
+        
+        # Set partition list for codesigning
+        security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
+        
+        # Verify certificate import
+        security find-identity -v -p codesigning $KEYCHAIN_PATH
         
         # Install provisioning profile
         mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
         cp $PP_PATH ~/Library/MobileDevice/Provisioning\ Profiles
+        
+        # Verify provisioning profile
+        ls -la ~/Library/MobileDevice/Provisioning\ Profiles/
         
     - name: Build IPA directly
       run: |
