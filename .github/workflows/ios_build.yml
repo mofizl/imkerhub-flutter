@@ -86,6 +86,11 @@ jobs:
         
     - name: Build IPA directly
       run: |
+        # List available SDKs
+        xcodebuild -showsdks
+        
+        # Set deployment target and build
+        export IPHONEOS_DEPLOYMENT_TARGET=13.0
         flutter build ipa --release --export-options-plist=ci/ExportOptions.plist
           
     - name: Upload to TestFlight
