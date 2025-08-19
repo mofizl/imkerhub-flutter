@@ -89,44 +89,24 @@ jobs:
         # Set deployment target
         export IPHONEOS_DEPLOYMENT_TARGET=13.0
         
-        # List available Xcode versions and use stable one
-        sudo xcode-select -s /Applications/Xcode_16.2.app/Contents/Developer || true
+        # Try using Xcode 16.0 instead of 16.2 for better iOS platform compatibility
+        sudo xcode-select -s /Applications/Xcode_16.0.app/Contents/Developer || sudo xcode-select -s /Applications/Xcode_15.4.app/Contents/Developer || true
         xcodebuild -version
+        xcodebuild -showsdks
         
-        # Build iOS without code signing first
-        flutter build ios --release --no-codesign
-        
-        # Then create archive with explicit SDK - try without destination
-        cd ios
-        xcodebuild -workspace Runner.xcworkspace \
-          -scheme Runner \
-          -configuration Release \
-          -sdk iphoneos18.0 \
-          -archivePath $PWD/build/Runner.xcarchive \
-          archive
-          
-        # Set up App Store Connect API key for export
-        echo -n "${{ secrets.APP_STORE_CONNECT_API_KEY_BASE64 }}" | base64 --decode > AuthKey_${{ secrets.APP_STORE_CONNECT_API_KEY_ID }}.p8
-        
-        # Export IPA with API key auth
-        xcodebuild -exportArchive \
-          -archivePath $PWD/build/Runner.xcarchive \
-          -exportPath $PWD/build \
-          -exportOptionsPlist ../ci/ExportOptions.plist \
-          -authenticationKeyPath $PWD/AuthKey_${{ secrets.APP_STORE_CONNECT_API_KEY_ID }}.p8 \
-          -authenticationKeyID ${{ secrets.APP_STORE_CONNECT_API_KEY_ID }} \
-          -authenticationKeyIssuerID ${{ secrets.APP_STORE_CONNECT_API_ISSUER_ID }}
+        # Use flutter build ipa directly - it handles SDK selection better
+        flutter build ipa --release --export-options-plist=ci/ExportOptions.plist
         
         # Debug: List files to see where IPA was created
-        echo "Files in ios/build directory:"
-        ls -la $PWD/build/ || echo "ios/build directory not found"
+        echo "Files in build/ios/ipa directory:"
+        ls -la build/ios/ipa/ || echo "build/ios/ipa directory not found"
         find . -name "*.ipa" -type f || echo "No IPA files found"
           
     - name: Upload build artifacts
       uses: actions/upload-artifact@v4
       with:
         name: iOS-Build
-        path: ios/build/Runner.ipa
+        path: build/ios/ipa/*.ipa
         
     - name: Clean up keychain
       if: ${{ always() }}
