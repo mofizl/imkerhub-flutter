@@ -101,24 +101,17 @@ jobs:
           -archivePath $PWD/build/Runner.xcarchive \
           archive
           
-        # Export IPA
+        # Set up App Store Connect API key for export
+        echo -n "${{ secrets.APP_STORE_CONNECT_API_KEY_BASE64 }}" | base64 --decode > AuthKey_${{ secrets.APP_STORE_CONNECT_API_KEY_ID }}.p8
+        
+        # Export IPA with API key auth
         xcodebuild -exportArchive \
           -archivePath $PWD/build/Runner.xcarchive \
           -exportPath $PWD/build \
-          -exportOptionsPlist ../ci/ExportOptions.plist
-          
-    - name: Upload to TestFlight
-      env:
-        APP_STORE_CONNECT_API_KEY_ID: ${{ secrets.APP_STORE_CONNECT_API_KEY_ID }}
-        APP_STORE_CONNECT_API_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_API_ISSUER_ID }}
-        APP_STORE_CONNECT_API_KEY_BASE64: ${{ secrets.APP_STORE_CONNECT_API_KEY_BASE64 }}
-      run: |
-        echo -n "$APP_STORE_CONNECT_API_KEY_BASE64" | base64 --decode > AuthKey_$APP_STORE_CONNECT_API_KEY_ID.p8
-        xcrun notarytool submit ios/build/Runner.ipa \
-          --key AuthKey_$APP_STORE_CONNECT_API_KEY_ID.p8 \
-          --key-id $APP_STORE_CONNECT_API_KEY_ID \
-          --issuer $APP_STORE_CONNECT_API_ISSUER_ID \
-          --wait
+          -exportOptionsPlist ../ci/ExportOptions.plist \
+          -authenticationKeyPath $PWD/AuthKey_${{ secrets.APP_STORE_CONNECT_API_KEY_ID }}.p8 \
+          -authenticationKeyID ${{ secrets.APP_STORE_CONNECT_API_KEY_ID }} \
+          -authenticationKeyIssuerID ${{ secrets.APP_STORE_CONNECT_API_ISSUER_ID }}
           
     - name: Upload build artifacts
       uses: actions/upload-artifact@v4
