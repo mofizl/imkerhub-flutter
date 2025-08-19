@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import '../models/models.dart';
 import '../services/storage_service.dart';
 import '../widgets/volk_card.dart';
@@ -47,7 +46,7 @@ class _HomeScreenState extends State<HomeScreen> {
         });
       }
     } catch (e) {
-      print('Error loading data: $e');
+      // print('Error loading data: $e');
       setState(() {
         isLoading = false;
       });

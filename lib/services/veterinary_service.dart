@@ -27,7 +27,7 @@ class VeterinaryService {
       final locationResult = await getGermanStateFromGPS(latitude, longitude);
       return veterinaryOffices[locationResult];
     } catch (e) {
-      print('Error finding veterinary office: $e');
+      // print('Error finding veterinary office: $e');
       return null;
     }
   }
@@ -73,7 +73,7 @@ class VeterinaryService {
       // Fallback based on coordinates
       return _getStateByCoordinates(latitude, longitude);
     } catch (e) {
-      print('Error in reverse geocoding: $e');
+      // print('Error in reverse geocoding: $e');
       return _getStateByCoordinates(latitude, longitude);
     }
   }
@@ -119,7 +119,7 @@ class VeterinaryService {
 
       return await Geolocator.getCurrentPosition();
     } catch (e) {
-      print('Error getting location: $e');
+      // print('Error getting location: $e');
       return null;
     }
   }
